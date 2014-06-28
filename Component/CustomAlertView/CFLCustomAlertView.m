@@ -10,9 +10,13 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface CFLCustomAlertView () {
+    BOOL isShowing;
+    
     BOOL isCustomView;
     NSArray *buttonTitles;
     NSArray *buttons;
+    
+    CGAffineTransform startingViewTransform;
 }
 
 @property (readonly) UIView *overlayView;
@@ -53,6 +57,9 @@ static CFLCustomAlertView *currentAlertView = nil;
 }
 
 -(void)show {
+    if (isShowing)
+        return;
+    
     NSEnumerator *windows = [[[UIApplication sharedApplication] windows] reverseObjectEnumerator];
     
     for (UIWindow *window in windows) {
@@ -65,6 +72,9 @@ static CFLCustomAlertView *currentAlertView = nil;
 }
 
 -(void)dismiss {
+    if (!isShowing)
+        return;
+    
     [self dismissWithButtonIndex:-1];
 }
 
@@ -75,10 +85,12 @@ static CFLCustomAlertView *currentAlertView = nil;
         }
     }
     [UIView animateWithDuration:0.2 animations:^{
-        self.overlayView.alpha = 0;
-        self.view.transform = CGAffineTransformScale(self.view.transform, 0.8, 0.8);
+        self.view.alpha = 0;
+        self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.f];
+        self.view.transform = CGAffineTransformScale(startingViewTransform, 0.8, 0.8);
     } completion:^(BOOL finished) {
         [self.overlayView removeFromSuperview];
+        isShowing = NO;
         if (buttonIndex != -1) {
             if ([self.delegate respondsToSelector:@selector(customAlertView:didDismissWithButtonIndex:)]) {
                 [self.delegate customAlertView:self didDismissWithButtonIndex:buttonIndex];
@@ -88,15 +100,15 @@ static CFLCustomAlertView *currentAlertView = nil;
 }
 
 -(void)showInWindow:(UIWindow*) window {
+    isShowing = YES;
     self.view.alpha = 0;
-    CGAffineTransform initialViewTransform = self.view.transform;
-    self.view.transform = CGAffineTransformScale(initialViewTransform, 1.2, 1.2);
-    self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.f];
+    self.view.transform = CGAffineTransformScale(startingViewTransform, 1.2, 1.2);
+    self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
     [window addSubview:self.overlayView];
     [UIView animateWithDuration:0.2 animations:^{
-        self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7f];
+        self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4f];
         self.view.alpha = 1;
-        self.view.transform = initialViewTransform;
+        self.view.transform = startingViewTransform;
     }];
 }
 
@@ -104,7 +116,7 @@ static CFLCustomAlertView *currentAlertView = nil;
 -(UIView *)overlayView {
     if (_overlayView == nil) {
         _overlayView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        _overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
+        _overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
     }
     return _overlayView;
 }
@@ -129,6 +141,7 @@ static CFLCustomAlertView *currentAlertView = nil;
         _view = [[UIView alloc] initWithFrame:CGRectMake(0.05*self.overlayView.frame.size.width, (self.overlayView.frame.size.height / 2.0) - 100, 0.9*self.overlayView.frame.size.width, 200)];
         _view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.85];
         [self roundView:_view withRadius:6];
+        startingViewTransform = _view.transform;
     }
     return _view;
 }
@@ -137,12 +150,20 @@ static CFLCustomAlertView *currentAlertView = nil;
     if (_view == nil) {
         isCustomView = YES;
         _view = view;
+        startingViewTransform = _view.transform;
     }
 }
 
 -(UIView *)viewButtonsHolder {
     if (_viewButtonsHolder == nil) {
-        _viewButtonsHolder = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-44, self.view.frame.size.width, 44)];
+        int numOfButtons = buttonTitles.count;
+        if (numOfButtons > 2) {
+            int height = numOfButtons * 44;
+            _viewButtonsHolder = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-height, self.view.frame.size.width, height)];
+        }
+        else {
+            _viewButtonsHolder = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-44, self.view.frame.size.width, 44)];
+        }
         [self putButtons];
     }
     return _viewButtonsHolder;
@@ -172,6 +193,38 @@ static CFLCustomAlertView *currentAlertView = nil;
 }
 
 -(void)putButtons {
+    if (buttonTitles.count > 2) {
+        buttons = [self putButtonsVertically];
+    }
+    else {
+        buttons = [self putButtonsHorizontally];
+    }
+}
+
+
+-(NSArray*)putButtonsVertically {
+    NSMutableArray *buttonsArray = [[NSMutableArray alloc] init];
+    
+    int buttonWidth = self.viewButtonsHolder.frame.size.width;
+    int buttonHeight = 44.f;
+    
+    for (int i = 0; i < buttonTitles.count; i++) {
+        NSString *buttonTitle = [buttonTitles objectAtIndex:i];
+        
+        UIButton *button = [self buttonWithDefaultStyleForTitle:buttonTitle];
+        
+        button.frame = CGRectMake(0, i*buttonHeight, buttonWidth, buttonHeight);
+        
+        CALayer *borderToAdd = [self topOnlyBorderLayerForButton:button];
+        
+        [button.layer addSublayer:borderToAdd];
+        [buttonsArray addObject:button];
+        [self.viewButtonsHolder addSubview:button];
+        [button addTarget:self action:@selector(didClickButton:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return buttonsArray;
+}
+-(NSArray*)putButtonsHorizontally {
     NSMutableArray *buttonsArray = [[NSMutableArray alloc] init];
     
     int buttonWidth = self.viewButtonsHolder.frame.size.width / buttonTitles.count;
@@ -179,20 +232,15 @@ static CFLCustomAlertView *currentAlertView = nil;
     
     for (int i = 0; i < buttonTitles.count; i++) {
         NSString *buttonTitle = [buttonTitles objectAtIndex:i];
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [button setTitle:buttonTitle forState:UIControlStateNormal];
-        [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+        UIButton *button = [self buttonWithDefaultStyleForTitle:buttonTitle];
         button.frame = CGRectMake(i*buttonWidth, 0, buttonWidth, buttonHeight);
-        button.clipsToBounds = YES;
-
-        CALayer *borderToAdd = [CALayer layer];
-        borderToAdd.borderColor = [UIColor colorWithWhite:0.66f alpha:0.85].CGColor;
-        borderToAdd.borderWidth = 0.5f;
+        
+        CALayer *borderToAdd;
         if (i != buttonTitles.count-1) {
-            borderToAdd.frame = CGRectMake(-0.5, 0, CGRectGetWidth(button.frame)+0.5, CGRectGetHeight(button.frame)+1.0);
+            borderToAdd = [self topRightBorderLayerForButton:button];
         }
         else {
-            borderToAdd.frame = CGRectMake(-0.5, 0, CGRectGetWidth(button.frame)+1.0, CGRectGetHeight(button.frame)+1.0);
+            borderToAdd = [self topOnlyBorderLayerForButton:button];
         }
         
         [button.layer addSublayer:borderToAdd];
@@ -200,7 +248,31 @@ static CFLCustomAlertView *currentAlertView = nil;
         [self.viewButtonsHolder addSubview:button];
         [button addTarget:self action:@selector(didClickButton:) forControlEvents:UIControlEventTouchUpInside];
     }
-    buttons = buttonsArray;
+    return buttonsArray;
+}
+
+-(UIButton*)buttonWithDefaultStyleForTitle:(NSString*)title {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+    button.clipsToBounds = YES;
+    return button;
+}
+
+-(CALayer *)topOnlyBorderLayerForButton:(UIButton*)button {
+    CALayer *borderToAdd = [CALayer layer];
+    borderToAdd.borderColor = [UIColor colorWithWhite:0.66f alpha:0.85].CGColor;
+    borderToAdd.borderWidth = 0.5f;
+    borderToAdd.frame = CGRectMake(-0.5, 0, CGRectGetWidth(button.frame)+1.0, CGRectGetHeight(button.frame)+1.0);
+    return borderToAdd;
+}
+
+-(CALayer *)topRightBorderLayerForButton:(UIButton*)button {
+    CALayer *borderToAdd = [CALayer layer];
+    borderToAdd.borderColor = [UIColor colorWithWhite:0.66f alpha:0.85].CGColor;
+    borderToAdd.borderWidth = 0.5f;
+    borderToAdd.frame = CGRectMake(-0.5, 0, CGRectGetWidth(button.frame)+0.5, CGRectGetHeight(button.frame)+1.0);
+    return borderToAdd;
 }
 
 -(void)didClickButton:(id)button {

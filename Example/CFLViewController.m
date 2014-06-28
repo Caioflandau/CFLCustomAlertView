@@ -9,7 +9,10 @@
 #import "CFLViewController.h"
 #import "CFLCustomAlertView.h"
 
-@interface CFLViewController () <CFLCustomAlertViewDelegate>
+@interface CFLViewController () <CFLCustomAlertViewDelegate> {
+    CFLCustomAlertView *customAlertView;
+    UIAlertView *alertView;
+}
 
 @end
 
@@ -29,10 +32,16 @@
 }
 - (IBAction)show:(UIButton*)sender {
     if (sender.tag == 0) {
-        [[[CFLCustomAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@[@"Ok", @"Mais"]] show];
+        if (customAlertView == nil) {
+            customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This is a custom AlertView!" message:@"Message" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
+        }
+        [customAlertView show];
     }
     else {
-        [[[UIAlertView alloc] initWithTitle:@"title" message:@"Message" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil] show];
+        if (alertView == nil) {
+            alertView = [[UIAlertView alloc] initWithTitle:@"This is a default AlertView" message:@"Message" delegate:self cancelButtonTitle:@"a" otherButtonTitles:@"b", @"c", nil];
+        }
+        [alertView show];
     }
 }
 

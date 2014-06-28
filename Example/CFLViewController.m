@@ -39,7 +39,7 @@
     }
     else {
         if (alertView == nil) {
-            alertView = [[UIAlertView alloc] initWithTitle:@"This is a default AlertView" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Ca,cel" otherButtonTitles:@"Ok", nil];
+            alertView = [[UIAlertView alloc] initWithTitle:@"This is a default AlertView" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
         }
         [alertView show];
     }

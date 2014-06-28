@@ -11,12 +11,16 @@
 
 @interface CFLCustomAlertView () {
     BOOL isShowing;
+    BOOL isViewReady;
     
     BOOL isCustomView;
     NSArray *buttonTitles;
     NSArray *buttons;
     
     CGAffineTransform startingViewTransform;
+    
+    NSString *title;
+    NSString *message;
 }
 
 @property (readonly) UIView *overlayView;
@@ -35,15 +39,21 @@
 @synthesize viewButtonsHolder = _viewButtonsHolder;
 
 @synthesize lblMessage = _lblMessage;
+@synthesize messageView = _messageView;
+
 @synthesize lblTitle = _lblTitle;
+@synthesize titleView = _titleView;
 
 @synthesize tintColor = _tintColor;
 
 static CFLCustomAlertView *currentAlertView = nil;
 
--(id)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id<CFLCustomAlertViewDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSArray *)otherButtonTitles {
+-(id)initWithTitle:(NSString *)t message:(NSString *)m delegate:(id<CFLCustomAlertViewDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSArray *)otherButtonTitles {
     self = [super init];
     if (self) {
+        isViewReady = NO;
+        title = t;
+        message = m;
         NSMutableArray *bTitles = [[NSMutableArray alloc] init];
         [bTitles addObject:cancelButtonTitle];
         for (NSString *btnTitle in otherButtonTitles) {
@@ -121,16 +131,59 @@ static CFLCustomAlertView *currentAlertView = nil;
     return _overlayView;
 }
 
+-(UIView *)titleView {
+    if (_titleView == nil) {
+        return self.lblTitle;
+    }
+    return _titleView;
+}
+
+-(void)setTitleView:(UIView *)titleView {
+    _titleView = titleView;
+}
+
 -(UILabel *)lblTitle {
     if (_lblTitle == nil) {
         _lblTitle = [[UILabel alloc] init];
+        _lblTitle.lineBreakMode = NSLineBreakByWordWrapping;
+        _lblTitle.numberOfLines = 0;
+        _lblTitle.textColor = [UIColor blackColor];
+        _lblTitle.font = [UIFont boldSystemFontOfSize:[UIFont labelFontSize]];
+        CGRect titleSize = [title boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.view.frame)-30, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblTitle.font} context:nil];
+        
+        _lblTitle.frame = CGRectMake(15, 15, self.view.frame.size.width-30, ceil(titleSize.size.height));
+        
+        _lblTitle.textAlignment = NSTextAlignmentCenter;
+        _lblTitle.text = title;
     }
     return _lblTitle;
+}
+
+-(UIView *)messageView {
+    if (_messageView == nil) {
+        return self.lblMessage;
+    }
+    return _messageView;
+}
+
+-(void)setMessageView:(UIView *)messageView {
+    _messageView = messageView;
 }
 
 -(UILabel *)lblMessage {
     if (_lblMessage == nil) {
         _lblMessage = [[UILabel alloc] init];
+        _lblMessage.lineBreakMode = NSLineBreakByWordWrapping;
+        _lblMessage.numberOfLines = 0;
+        _lblMessage.textColor = [UIColor blackColor];
+        _lblMessage.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        CGRect messageSize = [message boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.view.frame)-30, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblMessage.font} context:nil];
+        
+        _lblMessage.frame = CGRectMake(15, 20+self.lblTitle.frame.size.height, self.view.frame.size.width-30, ceil(messageSize.size.height));
+        
+        _lblMessage.textAlignment = NSTextAlignmentCenter;
+        _lblMessage.contentMode = UIViewContentModeTop | UIViewContentModeCenter;
+        _lblMessage.text = message;
     }
     return _lblMessage;
 }
@@ -183,13 +236,31 @@ static CFLCustomAlertView *currentAlertView = nil;
 
 #pragma mark - Inner Methods
 -(void)setupView {
+    if (isViewReady)
+        return;
+    
     if (!isCustomView) {
-        [self.view addSubview:self.lblTitle];
-        [self.view addSubview:self.lblMessage];
+        [self.view addSubview:self.titleView];
+        [self.view addSubview:self.messageView];
+        [self viewButtonsHolder];
+        self.view.frame = [self calculateViewFrame];
+        _viewButtonsHolder = nil;
         [self.view addSubview:self.viewButtonsHolder];
     }
     
     [self.overlayView addSubview:self.view];
+    isViewReady = YES;
+}
+
+-(CGRect)calculateViewFrame {
+    int width = 0.9*self.overlayView.frame.size.width;
+    int height = 0;
+    height += self.titleView.frame.size.height;
+    height += self.messageView.frame.size.height;
+    height += self.viewButtonsHolder.frame.size.height;
+    height += 40; //Adding margins...
+    
+    return CGRectMake(0.05*self.overlayView.frame.size.width, (self.overlayView.frame.size.height / 2.0) - ceil((float)height / 2.0), width, height);
 }
 
 -(void)putButtons {
@@ -251,9 +322,9 @@ static CFLCustomAlertView *currentAlertView = nil;
     return buttonsArray;
 }
 
--(UIButton*)buttonWithDefaultStyleForTitle:(NSString*)title {
+-(UIButton*)buttonWithDefaultStyleForTitle:(NSString*)t {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitle:t forState:UIControlStateNormal];
     [button setTitleColor:self.tintColor forState:UIControlStateNormal];
     button.clipsToBounds = YES;
     return button;

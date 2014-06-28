@@ -33,13 +33,13 @@
 - (IBAction)show:(UIButton*)sender {
     if (sender.tag == 0) {
         if (customAlertView == nil) {
-            customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This is a custom AlertView!" message:@"Message" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
+            customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This is a custom AlertView!" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
         }
         [customAlertView show];
     }
     else {
         if (alertView == nil) {
-            alertView = [[UIAlertView alloc] initWithTitle:@"This is a default AlertView" message:@"Message" delegate:self cancelButtonTitle:@"a" otherButtonTitles:@"b", @"c", nil];
+            alertView = [[UIAlertView alloc] initWithTitle:@"This is a default AlertView" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Ca,cel" otherButtonTitles:@"Ok", nil];
         }
         [alertView show];
     }

@@ -20,8 +20,19 @@
 @property UIView *view;
 
 
+/**
+ View to show as the dialog's title in place of a simple UILabel
+ This property only works if not using a custom view
+ */
 @property UIView *titleView;
+
+
+/**
+ View to show as the dialog's message in place of a simple UILabel
+ This property only works if not using a custom view
+ */
 @property UIView *messageView;
+
 
 @property UIColor *tintColor;
 

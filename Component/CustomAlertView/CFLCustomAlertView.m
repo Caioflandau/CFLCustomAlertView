@@ -58,16 +58,47 @@ static CFLCustomAlertView *currentAlertView = nil;
     for (UIWindow *window in windows) {
         if (window.windowLevel == UIWindowLevelNormal) {
             [self setupView];
-            [window addSubview:self.overlayView];
+            [self showInWindow:window];
             break;
         }
     }
 }
 
 -(void)dismiss {
-    
+    [self dismissWithButtonIndex:-1];
 }
 
+-(void)dismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != -1) {
+        if ([self.delegate respondsToSelector:@selector(customAlertView:willDismissWithButtonIndex:)]) {
+            [self.delegate customAlertView:self willDismissWithButtonIndex:buttonIndex];
+        }
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        self.overlayView.alpha = 0;
+        self.view.transform = CGAffineTransformScale(self.view.transform, 0.8, 0.8);
+    } completion:^(BOOL finished) {
+        [self.overlayView removeFromSuperview];
+        if (buttonIndex != -1) {
+            if ([self.delegate respondsToSelector:@selector(customAlertView:didDismissWithButtonIndex:)]) {
+                [self.delegate customAlertView:self didDismissWithButtonIndex:buttonIndex];
+            }
+        }
+    }];
+}
+
+-(void)showInWindow:(UIWindow*) window {
+    self.view.alpha = 0;
+    CGAffineTransform initialViewTransform = self.view.transform;
+    self.view.transform = CGAffineTransformScale(initialViewTransform, 1.2, 1.2);
+    self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.f];
+    [window addSubview:self.overlayView];
+    [UIView animateWithDuration:0.2 animations:^{
+        self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7f];
+        self.view.alpha = 1;
+        self.view.transform = initialViewTransform;
+    }];
+}
 
 #pragma mark - Getter/Setter
 -(UIView *)overlayView {
@@ -96,8 +127,8 @@ static CFLCustomAlertView *currentAlertView = nil;
     if (_view == nil) {
         isCustomView = NO;
         _view = [[UIView alloc] initWithFrame:CGRectMake(0.05*self.overlayView.frame.size.width, (self.overlayView.frame.size.height / 2.0) - 100, 0.9*self.overlayView.frame.size.width, 200)];
-        _view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.9];
-        [self roundView:_view withRadius:8];
+        _view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.85];
+        [self roundView:_view withRadius:6];
     }
     return _view;
 }
@@ -131,9 +162,11 @@ static CFLCustomAlertView *currentAlertView = nil;
 
 #pragma mark - Inner Methods
 -(void)setupView {
-    [self.view addSubview:self.lblTitle];
-    [self.view addSubview:self.lblMessage];
-    [self.view addSubview:self.viewButtonsHolder];
+    if (!isCustomView) {
+        [self.view addSubview:self.lblTitle];
+        [self.view addSubview:self.lblMessage];
+        [self.view addSubview:self.viewButtonsHolder];
+    }
     
     [self.overlayView addSubview:self.view];
 }
@@ -153,13 +186,13 @@ static CFLCustomAlertView *currentAlertView = nil;
         button.clipsToBounds = YES;
 
         CALayer *borderToAdd = [CALayer layer];
-        borderToAdd.borderColor = [UIColor lightGrayColor].CGColor;
-        borderToAdd.borderWidth = 1.f;
+        borderToAdd.borderColor = [UIColor colorWithWhite:0.66f alpha:0.85].CGColor;
+        borderToAdd.borderWidth = 0.5f;
         if (i != buttonTitles.count-1) {
-            borderToAdd.frame = CGRectMake(-1, 0, CGRectGetWidth(button.frame)+1, CGRectGetHeight(button.frame)+1);
+            borderToAdd.frame = CGRectMake(-0.5, 0, CGRectGetWidth(button.frame)+0.5, CGRectGetHeight(button.frame)+1.0);
         }
         else {
-            borderToAdd.frame = CGRectMake(-1, 0, CGRectGetWidth(button.frame)+2, CGRectGetHeight(button.frame)+1);
+            borderToAdd.frame = CGRectMake(-0.5, 0, CGRectGetWidth(button.frame)+1.0, CGRectGetHeight(button.frame)+1.0);
         }
         
         [button.layer addSublayer:borderToAdd];
@@ -171,9 +204,11 @@ static CFLCustomAlertView *currentAlertView = nil;
 }
 
 -(void)didClickButton:(id)button {
+    NSInteger buttonIndex = [buttons indexOfObject:button];
     if ([self.delegate respondsToSelector:@selector(customAlertView:clickedButtonAtIndex:)]) {
-        [self.delegate customAlertView:self clickedButtonAtIndex:[buttons indexOfObject:button]];
+        [self.delegate customAlertView:self clickedButtonAtIndex:buttonIndex];
     }
+    [self dismissWithButtonIndex:buttonIndex];
 }
 
 #pragma mark - Utility

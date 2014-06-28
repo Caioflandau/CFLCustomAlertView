@@ -27,8 +27,13 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)show:(id)sender {
-    [[[CFLCustomAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@[@"Ok", @"Mais"]] show];
+- (IBAction)show:(UIButton*)sender {
+    if (sender.tag == 0) {
+        [[[CFLCustomAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@[@"Ok", @"Mais"]] show];
+    }
+    else {
+        [[[UIAlertView alloc] initWithTitle:@"title" message:@"Message" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil] show];
+    }
 }
 
 
@@ -36,5 +41,13 @@
 
 -(void)customAlertView:(CFLCustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"customAlertView:clickedButtonAtIndex: %d", buttonIndex);
+}
+
+-(void)customAlertView:(CFLCustomAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+    NSLog(@"customAlertView:willDismissWithButtonIndex: %d", buttonIndex);
+}
+
+-(void)customAlertView:(CFLCustomAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    NSLog(@"customAlertView:didDismissWithButtonIndex: %d", buttonIndex);
 }
 @end

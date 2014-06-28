@@ -38,7 +38,11 @@
 #pragma mark - Delegate Definition
 
 @protocol CFLCustomAlertViewDelegate <NSObject>
+@optional
 
 -(void)customAlertView:(CFLCustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
+
+- (void)customAlertView:(CFLCustomAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex;
+- (void)customAlertView:(CFLCustomAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;
 
 @end

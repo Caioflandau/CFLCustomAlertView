@@ -281,13 +281,14 @@ static CFLCustomAlertView *currentAlertView = nil;
 
 
 -(NSArray*)putButtonsVertically {
-    NSMutableArray *buttonsArray = [[NSMutableArray alloc] init];
-    
     int buttonWidth = self.viewButtonsHolder.frame.size.width;
     int buttonHeight = 44.f;
     
-    for (int i = 0; i < buttonTitles.count; i++) {
-        NSString *buttonTitle = [buttonTitles objectAtIndex:i];
+    NSArray *reverseButtons = [[buttonTitles reverseObjectEnumerator] allObjects];
+    
+    NSMutableArray *reverseButtonsArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < reverseButtons.count; i++) {
+        NSString *buttonTitle = [reverseButtons objectAtIndex:i];
         
         UIButton *button = [self buttonWithDefaultStyleForTitle:buttonTitle];
         
@@ -296,11 +297,11 @@ static CFLCustomAlertView *currentAlertView = nil;
         CALayer *borderToAdd = [self topOnlyBorderLayerForButton:button];
         
         [button.layer addSublayer:borderToAdd];
-        [buttonsArray addObject:button];
+        [reverseButtonsArray addObject:button];
         [self.viewButtonsHolder addSubview:button];
         [button addTarget:self action:@selector(didClickButton:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return buttonsArray;
+    return [[reverseButtonsArray reverseObjectEnumerator] allObjects];
 }
 -(NSArray*)putButtonsHorizontally {
     NSMutableArray *buttonsArray = [[NSMutableArray alloc] init];

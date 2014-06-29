@@ -30,21 +30,30 @@
 }
 
 -(IBAction)showRegular:(UIButton*)sender {
-    CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This is a text-only AlertView" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
+    CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This is a text-only AlertView"
+                                                                            message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                                                                           delegate:self cancelButtonTitle:@"Cancel"
+                                                                  otherButtonTitles:@[@"Ok"]];
     [customAlertView show];
 
 }
 -(IBAction)showCustomTitle:(UIButton*)sender {
     CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"" message:@"But this message is just plain text." delegate:self cancelButtonTitle:@"Will stack vertically" otherButtonTitles:@[@"More buttons", @"Three or"]];
+    
+    //Setting custom title view:
     customAlertView.titleView = [[[NSBundle mainBundle] loadNibNamed:@"TitleView" owner:self options:nil] objectAtIndex:0];
+    
     [customAlertView show];
 }
 -(IBAction)showCustomMessage:(UIButton*)sender {
     CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This title is... Yes, just PLAIN OLD TEXT!" message:@"" delegate:self cancelButtonTitle:@"Buttons" otherButtonTitles:@[@"Tinted", @"Custom"]];
+    
+    //Setting custom message view (in this case, an UIImageView)
     customAlertView.messageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"apple_logo"]];
     customAlertView.messageView.contentMode = UIViewContentModeScaleAspectFit;
     customAlertView.messageView.frame = CGRectMake(0, 10, customAlertView.view.frame.size.width, 128);
     customAlertView.tintColor = [UIColor colorWithRed:1 green:105.0/255.0 blue:0.0 alpha:1];
+    
     [customAlertView show];
 }
 -(IBAction)showCustomTitleAndMessage:(UIButton*)sender {

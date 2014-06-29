@@ -61,14 +61,14 @@
 #pragma mark - CFLCustomAlertViewDelegate
 
 -(void)customAlertView:(CFLCustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"customAlertView:clickedButtonAtIndex: %d", buttonIndex);
+    NSLog(@"customAlertView:clickedButtonAtIndex: %d", (int)buttonIndex);
 }
 
 -(void)customAlertView:(CFLCustomAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
-    NSLog(@"customAlertView:willDismissWithButtonIndex: %d", buttonIndex);
+    NSLog(@"customAlertView:willDismissWithButtonIndex: %d", (int)buttonIndex);
 }
 
 -(void)customAlertView:(CFLCustomAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    NSLog(@"customAlertView:didDismissWithButtonIndex: %d", buttonIndex);
+    NSLog(@"customAlertView:didDismissWithButtonIndex: %d", (int)buttonIndex);
 }
 @end

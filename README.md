@@ -25,4 +25,7 @@ customAlertView.messageView = <UIView object>;
 [customAlertView show];
 
 ```
+
+If you need the delegate methods (`customAlertView:clickedButtonAtIndex:` for instance), just make your ViewController conform to the `CFLCustomAlertViewDelegate` protocol.
+
 For more examples and options, please check the Example project in the repository

@@ -56,7 +56,12 @@
 
 -(void)customAlertView:(CFLCustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 
-- (void)customAlertView:(CFLCustomAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex;
-- (void)customAlertView:(CFLCustomAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;
+-(void)customAlertView:(CFLCustomAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex;
+-(void)customAlertView:(CFLCustomAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;
+
+/**
+ Asks the delegate if tapping outside the AlerView should dismiss it. Defaults to NO, unless using a custom view
+ */
+-(BOOL)customAlertViewShouldDismissOnTapOutside:(CFLCustomAlertView *)alertView;
 
 @end

@@ -7,9 +7,10 @@
 //
 
 #import "CFLCustomAlertView.h"
+#import "CFLAlertViewTapOutsideRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface CFLCustomAlertView () {
+@interface CFLCustomAlertView () <CFLAlertViewTapOutsideRecognizerDelegate> {
     BOOL isShowing;
     BOOL isViewReady;
     
@@ -127,6 +128,9 @@ static CFLCustomAlertView *currentAlertView = nil;
     if (_overlayView == nil) {
         _overlayView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         _overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
+        CFLAlertViewTapOutsideRecognizer *recognzier = [[CFLAlertViewTapOutsideRecognizer alloc] init];
+        recognzier.tapOutsideDelegate = self;
+        [_overlayView addGestureRecognizer:recognzier];
     }
     return _overlayView;
 }
@@ -209,9 +213,9 @@ static CFLCustomAlertView *currentAlertView = nil;
 
 -(UIView *)viewButtonsHolder {
     if (_viewButtonsHolder == nil) {
-        int numOfButtons = buttonTitles.count;
+        NSUInteger numOfButtons = buttonTitles.count;
         if (numOfButtons > 2) {
-            int height = numOfButtons * 44;
+            NSUInteger height = numOfButtons * 44;
             _viewButtonsHolder = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-height, self.view.frame.size.width, height)];
         }
         else {
@@ -248,7 +252,13 @@ static CFLCustomAlertView *currentAlertView = nil;
         _viewButtonsHolder = nil;
         [self.view addSubview:self.viewButtonsHolder];
     }
-    
+    else {
+        //Center custom view
+        CGRect frame = self.view.frame;
+        NSInteger x = (CGRectGetWidth(self.overlayView.frame) - CGRectGetWidth(frame))/2.0;
+        NSInteger y = (CGRectGetHeight(self.overlayView.frame) - CGRectGetHeight(frame))/2.0;
+        self.view.frame = CGRectMake(x, y, frame.size.width, frame.size.height);
+    }
     [self.overlayView addSubview:self.view];
     isViewReady = YES;
 }
@@ -362,6 +372,20 @@ static CFLCustomAlertView *currentAlertView = nil;
     [self dismissWithButtonIndex:buttonIndex];
 }
 
+#pragma mark - CFLAlertViewTapOutsideRecognizerDelegate
+-(void)didTapOutside {
+    BOOL shouldDismiss = NO;
+    if ([self.delegate respondsToSelector:@selector(customAlertViewShouldDismissOnTapOutside:)]) {
+        shouldDismiss = [self.delegate customAlertViewShouldDismissOnTapOutside:self];
+    }
+    else if (isCustomView) {
+        shouldDismiss = YES;
+    }
+    if (shouldDismiss) {
+        [self dismiss];
+    }
+}
+
 #pragma mark - Utility
 -(void) roundView:(UIView*)view withRadius:(int) radius
 {
@@ -369,6 +393,5 @@ static CFLCustomAlertView *currentAlertView = nil;
     view.clipsToBounds = YES;
     view.layer.masksToBounds = YES;
 }
-
 
 @end

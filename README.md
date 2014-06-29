@@ -16,7 +16,11 @@ It tries to resemble native UIAlertView as much as possible to make the transiti
 ##Simple Usage
 Anyone who has ever used UIAlertView should have no problems:
 ```Objective-c
-CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"" message:@"But this message is just plain text." delegate:self cancelButtonTitle:@"Will stack vertically" otherButtonTitles:@[@"More buttons", @"Three or"]];
+CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@""
+                                                                            message:@"But this message is just plain text."
+                                                                           delegate:self
+                                                                  cancelButtonTitle:@"Will stack vertically"
+                                                                  otherButtonTitles:@[@"More buttons", @"Three or"]];
 
 //Setting custom title and message view:
 customAlertView.titleView = <UIView object>;

@@ -20,6 +20,7 @@
 		25B3DBAE195C8C1400F85935 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B3DB8D195C8C1400F85935 /* Foundation.framework */; };
 		25B3DBAF195C8C1400F85935 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B3DB91195C8C1400F85935 /* UIKit.framework */; };
 		25B3DBC6195C8CC800F85935 /* CFLCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B3DBC5195C8CC800F85935 /* CFLCustomAlertView.m */; };
+		585F65BE1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 585F65BD1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m */; };
 		58DAFD63195FD00D003EE805 /* apple_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 58DAFD62195FD00D003EE805 /* apple_logo.png */; };
 		58DAFD68195FD59B003EE805 /* TitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58DAFD67195FD59B003EE805 /* TitleView.xib */; };
 		58DAFD6A195FE334003EE805 /* info_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 58DAFD69195FE334003EE805 /* info_icon.png */; };
@@ -54,6 +55,8 @@
 		25B3DBAC195C8C1400F85935 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		25B3DBC4195C8CC800F85935 /* CFLCustomAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFLCustomAlertView.h; sourceTree = "<group>"; };
 		25B3DBC5195C8CC800F85935 /* CFLCustomAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFLCustomAlertView.m; sourceTree = "<group>"; };
+		585F65BC1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFLAlertViewTapOutsideRecognizer.h; sourceTree = "<group>"; };
+		585F65BD1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFLAlertViewTapOutsideRecognizer.m; sourceTree = "<group>"; };
 		58DAFD62195FD00D003EE805 /* apple_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple_logo.png; sourceTree = "<group>"; };
 		58DAFD67195FD59B003EE805 /* TitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TitleView.xib; sourceTree = "<group>"; };
 		58DAFD69195FE334003EE805 /* info_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_icon.png; sourceTree = "<group>"; };
@@ -154,6 +157,8 @@
 			children = (
 				25B3DBC4195C8CC800F85935 /* CFLCustomAlertView.h */,
 				25B3DBC5195C8CC800F85935 /* CFLCustomAlertView.m */,
+				585F65BC1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.h */,
+				585F65BD1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m */,
 			);
 			path = CustomAlertView;
 			sourceTree = "<group>";
@@ -266,6 +271,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				585F65BE1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m in Sources */,
 				25B3DB9E195C8C1400F85935 /* CFLAppDelegate.m in Sources */,
 				25B3DB9A195C8C1400F85935 /* main.m in Sources */,
 				25B3DBC6195C8CC800F85935 /* CFLCustomAlertView.m in Sources */,

@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Component/CustomAlertView/CFLCustomAlertView.m"
-            timestampString = "425713393.838518"
+            timestampString = "425767606.060095"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "244"
-            endingLineNumber = "244"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
             landmarkName = "-setupView"
             landmarkType = "5">
          </BreakpointContent>
@@ -25,13 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Component/CustomAlertView/CFLCustomAlertView.m"
-            timestampString = "425713494.928963"
+            filePath = "Component/CustomAlertView/CFLAlertViewTapOutsideRecognizer.m"
+            timestampString = "425769655.261958"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "266"
-            endingLineNumber = "266"
-            landmarkName = "-calculateViewFrame"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "-onTap"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

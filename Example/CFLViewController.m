@@ -33,7 +33,10 @@
 - (IBAction)show:(UIButton*)sender {
     if (sender.tag == 0) {
         if (customAlertView == nil) {
-            customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This is a custom AlertView!" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
+            customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
+            customAlertView.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"apple_logo.png"]];
+            customAlertView.titleView.contentMode = UIViewContentModeScaleAspectFit;
+            customAlertView.titleView.frame = CGRectMake(0, 15, customAlertView.view.frame.size.width, 128);
         }
         [customAlertView show];
     }

@@ -179,7 +179,7 @@ static CFLCustomAlertView *currentAlertView = nil;
         _lblMessage.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
         CGRect messageSize = [message boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.view.frame)-30, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblMessage.font} context:nil];
         
-        _lblMessage.frame = CGRectMake(15, 20+self.lblTitle.frame.size.height, self.view.frame.size.width-30, ceil(messageSize.size.height));
+        _lblMessage.frame = CGRectMake(15, 0, self.view.frame.size.width-30, ceil(messageSize.size.height));
         
         _lblMessage.textAlignment = NSTextAlignmentCenter;
         _lblMessage.contentMode = UIViewContentModeTop | UIViewContentModeCenter;
@@ -241,6 +241,7 @@ static CFLCustomAlertView *currentAlertView = nil;
     
     if (!isCustomView) {
         [self.view addSubview:self.titleView];
+        self.messageView.transform = CGAffineTransformMakeTranslation(0, self.titleView.frame.size.height+self.titleView.frame.origin.y);
         [self.view addSubview:self.messageView];
         [self viewButtonsHolder];
         self.view.frame = [self calculateViewFrame];
@@ -256,9 +257,10 @@ static CFLCustomAlertView *currentAlertView = nil;
     int width = 0.9*self.overlayView.frame.size.width;
     int height = 0;
     height += self.titleView.frame.size.height;
+    height += self.titleView.frame.origin.y;
     height += self.messageView.frame.size.height;
     height += self.viewButtonsHolder.frame.size.height;
-    height += 40; //Adding margins...
+    height += 25; //Adding margins...
     
     return CGRectMake(0.05*self.overlayView.frame.size.width, (self.overlayView.frame.size.height / 2.0) - ceil((float)height / 2.0), width, height);
 }

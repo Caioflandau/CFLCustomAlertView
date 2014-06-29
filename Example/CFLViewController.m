@@ -10,8 +10,6 @@
 #import "CFLCustomAlertView.h"
 
 @interface CFLViewController () <CFLCustomAlertViewDelegate> {
-    CFLCustomAlertView *customAlertView;
-    UIAlertView *alertView;
 }
 
 @end
@@ -30,22 +28,32 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)show:(UIButton*)sender {
-    if (sender.tag == 0) {
-        if (customAlertView == nil) {
-            customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
-            customAlertView.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"apple_logo.png"]];
-            customAlertView.titleView.contentMode = UIViewContentModeScaleAspectFit;
-            customAlertView.titleView.frame = CGRectMake(0, 15, customAlertView.view.frame.size.width, 128);
-        }
-        [customAlertView show];
-    }
-    else {
-        if (alertView == nil) {
-            alertView = [[UIAlertView alloc] initWithTitle:@"This is a default AlertView" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
-        }
-        [alertView show];
-    }
+
+-(IBAction)showRegular:(UIButton*)sender {
+    CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This is a text-only AlertView" message:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok"]];
+    [customAlertView show];
+
+}
+-(IBAction)showCustomTitle:(UIButton*)sender {
+    CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"" message:@"But this message is just plain text." delegate:self cancelButtonTitle:@"Buttons" otherButtonTitles:@[@"Tinted", @"Custom"]];
+    customAlertView.titleView = [[[NSBundle mainBundle] loadNibNamed:@"TitleView" owner:self options:nil] objectAtIndex:0];
+    customAlertView.tintColor = [UIColor colorWithRed:1 green:105.0/255.0 blue:0.0 alpha:1];
+    [customAlertView show];
+}
+-(IBAction)showCustomMessage:(UIButton*)sender {
+    CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"This title is... Yes, just PLAIN OLD TEXT!" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Ok", @"3+ buttons stack vertically!"]];
+    customAlertView.messageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"apple_logo"]];
+    customAlertView.messageView.contentMode = UIViewContentModeScaleAspectFit;
+    customAlertView.messageView.frame = CGRectMake(0, 10, customAlertView.view.frame.size.width, 128);
+    [customAlertView show];
+}
+-(IBAction)showCustomTitleAndMessage:(UIButton*)sender {
+    CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@[]];
+    customAlertView.titleView = [[[NSBundle mainBundle] loadNibNamed:@"TitleView" owner:self options:nil] objectAtIndex:0];
+    customAlertView.messageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"apple_logo"]];
+    customAlertView.messageView.contentMode = UIViewContentModeScaleAspectFit;
+    customAlertView.messageView.frame = CGRectMake(0, 10, customAlertView.view.frame.size.width, 128);
+    [customAlertView show];
 }
 
 

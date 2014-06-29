@@ -34,6 +34,9 @@
 @property UIView *messageView;
 
 
+/**
+ Set this property to change the buttons' text color
+*/
 @property UIColor *tintColor;
 
 

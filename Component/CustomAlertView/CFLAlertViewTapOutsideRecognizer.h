@@ -10,6 +10,7 @@
 
 @protocol CFLAlertViewTapOutsideRecognizerDelegate <NSObject>
 
+-(UIView*)dialogView;
 -(void)didTapOutside;
 
 @end

@@ -366,25 +366,32 @@ static CFLCustomAlertView *currentAlertView = nil;
 
 -(void)didClickButton:(id)button {
     NSInteger buttonIndex = [buttons indexOfObject:button];
-    if ([self.delegate respondsToSelector:@selector(customAlertView:clickedButtonAtIndex:)]) {
+    if ([self.delegate respondsToSelector:@selector(customAlertView:clickedButtonAtIndex:)])
         [self.delegate customAlertView:self clickedButtonAtIndex:buttonIndex];
-    }
+    
     [self dismissWithButtonIndex:buttonIndex];
 }
 
 #pragma mark - CFLAlertViewTapOutsideRecognizerDelegate
+-(UIView *)dialogView {
+    return self.view;
+}
+
 -(void)didTapOutside {
     BOOL shouldDismiss = NO;
-    if ([self.delegate respondsToSelector:@selector(customAlertViewShouldDismissOnTapOutside:)]) {
+    if ([self.delegate respondsToSelector:@selector(customAlertViewShouldDismissOnTapOutside:)])
         shouldDismiss = [self.delegate customAlertViewShouldDismissOnTapOutside:self];
-    }
+    
     else if (isCustomView) {
         shouldDismiss = YES;
     }
     if (shouldDismiss) {
         [self dismiss];
+        if ([self.delegate respondsToSelector:@selector(customAlertViewDidDismissByTappingOutside:)])
+            [self.delegate customAlertViewDidDismissByTappingOutside:self];
     }
 }
+
 
 #pragma mark - Utility
 -(void) roundView:(UIView*)view withRadius:(int) radius

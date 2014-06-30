@@ -1,4 +1,4 @@
-//
+    //
 //  CFLAlertViewTapOutsideRecognizer.m
 //  CustomAlertView
 //
@@ -8,6 +8,10 @@
 
 #import "CFLAlertViewTapOutsideRecognizer.h"
 
+@interface CFLAlertViewTapOutsideRecognizer ()
+
+@end
+
 @implementation CFLAlertViewTapOutsideRecognizer
 
 -(id)init {
@@ -16,9 +20,12 @@
 }
 
 -(void)onTap {
-    UIView *viewTapped = [self.view hitTest:[self locationInView:self.view] withEvent:nil];
-    if (viewTapped == self.view) {
-        [self.tapOutsideDelegate didTapOutside];
+    if (self.state == UIGestureRecognizerStateEnded) {
+        UIView *dialogView = [self.tapOutsideDelegate dialogView];
+        CGPoint location = [self locationInView:self.view];
+        if (![dialogView pointInside:[dialogView convertPoint:location fromView:self.view] withEvent:nil]) {
+            [self.tapOutsideDelegate didTapOutside];
+        }
     }
 }
 

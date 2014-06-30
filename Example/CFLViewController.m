@@ -84,7 +84,6 @@
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"apple_logo"]];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
-//    imageView.frame = CGRectMake(0, 10, customAlertView.view.frame.size.width, 128);
     customAlertView.view = imageView;
     [customAlertView show];
 }

@@ -3,7 +3,9 @@
 CFLCustomAlertView is a customizable AlertView for iOS.
 It tries to resemble native UIAlertView as much as possible to make the transition easier.
 
-![Custom Title](http://caioflandau.github.io/CFLCustomAlertView/custom_title.png) ![Custom Message](http://caioflandau.github.io/CFLCustomAlertView/custom_message.png) ![Custom View](http://caioflandau.github.io/CFLCustomAlertView/custom_view.png)
+| Custom title view | Custom message view | Custom view |
+| ----------------- | ------------------- | ----------- |
+![Custom Title](http://caioflandau.github.io/CFLCustomAlertView/custom_title.png) | ![Custom Message](http://caioflandau.github.io/CFLCustomAlertView/custom_message.png) | ![Custom View](http://caioflandau.github.io/CFLCustomAlertView/custom_view.png)
 
 ##Main features
 * Custom views for title and/or message

@@ -7,6 +7,7 @@ It tries to resemble native UIAlertView as much as possible to make the transiti
 * Custom views for title and/or message
 * Custom tint color for dialog buttons
 * Access to the root dialog view so you can change background color, etc
+* Tap outside to dismiss (disabled by default).
 
 ##Easy to install
 1. Clone/download this repository

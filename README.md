@@ -38,3 +38,10 @@ customAlertView.messageView = <UIView object>;
 If you need the delegate methods (`customAlertView:clickedButtonAtIndex:` for instance), just make your ViewController conform to the `CFLCustomAlertViewDelegate` protocol.
 
 For more examples and options, please check the Example project in the repository
+
+##Current limitations
+This is a newly released component. As such, expect some limitations and probably even some bugs. Here's a small list:
+
+* Currently, only supports portrait orientation.
+* Support for iPad is limited. It can be useful with a custom view.
+* For more, check [issues](https://github.com/Caioflandau/CFLCustomAlertView/issues)

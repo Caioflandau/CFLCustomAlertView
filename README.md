@@ -18,7 +18,7 @@ It tries to resemble native UIAlertView as much as possible to make the transiti
 2. Include the content of cloned `Component` folder in your project
 3. `#import "CFLCustomAlertView.h"` in your ViewController or where you will be showing the alert
 
-##Simple Usage
+##Simple usage
 Anyone who has ever used UIAlertView should have no problems:
 ```Objective-c
 CFLCustomAlertView *customAlertView = [[CFLCustomAlertView alloc] initWithTitle:@""

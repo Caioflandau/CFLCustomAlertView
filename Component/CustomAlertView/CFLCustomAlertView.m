@@ -64,6 +64,11 @@ static CFLCustomAlertView *currentAlertView = nil;
         self.delegate = delegate;
     }
     currentAlertView = self;
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object:nil];
+    
     return self;
 }
 
@@ -71,15 +76,8 @@ static CFLCustomAlertView *currentAlertView = nil;
     if (isShowing)
         return;
     
-    NSEnumerator *windows = [[[UIApplication sharedApplication] windows] reverseObjectEnumerator];
-    
-    for (UIWindow *window in windows) {
-        if (window.windowLevel == UIWindowLevelNormal) {
-            [self setupView];
-            [self showInWindow:window];
-            break;
-        }
-    }
+    [self setupView];
+    [self showInWindow:[self windowToShow]];
 }
 
 -(void)dismiss {
@@ -90,6 +88,10 @@ static CFLCustomAlertView *currentAlertView = nil;
 }
 
 -(void)dismissWithButtonIndex:(NSInteger)buttonIndex {
+    [self dismissWithButtonIndex:buttonIndex completion:nil];
+}
+
+-(void)dismissWithButtonIndex:(NSInteger)buttonIndex completion:(SEL)selector {
     if (buttonIndex != -1) {
         if ([self.delegate respondsToSelector:@selector(customAlertView:willDismissWithButtonIndex:)]) {
             [self.delegate customAlertView:self willDismissWithButtonIndex:buttonIndex];
@@ -107,15 +109,20 @@ static CFLCustomAlertView *currentAlertView = nil;
                 [self.delegate customAlertView:self didDismissWithButtonIndex:buttonIndex];
             }
         }
+        if ([self respondsToSelector:selector]) {
+            [self performSelectorOnMainThread:selector withObject:nil waitUntilDone:NO];
+        }
+        
     }];
 }
+
 
 -(void)showInWindow:(UIWindow*) window {
     isShowing = YES;
     self.view.alpha = 0;
     self.view.transform = CGAffineTransformScale(startingViewTransform, 1.2, 1.2);
     self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
-    [window addSubview:self.overlayView];
+    [[window.subviews objectAtIndex:0] addSubview:self.overlayView];
     [UIView animateWithDuration:0.2 animations:^{
         self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4f];
         self.view.alpha = 1;
@@ -126,12 +133,22 @@ static CFLCustomAlertView *currentAlertView = nil;
 #pragma mark - Getter/Setter
 -(UIView *)overlayView {
     if (_overlayView == nil) {
-        _overlayView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        _overlayView = [[UIView alloc] initWithFrame:[self windowToShow].bounds];
         _overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
         CFLAlertViewTapOutsideRecognizer *recognzier = [[CFLAlertViewTapOutsideRecognizer alloc] init];
         recognzier.tapOutsideDelegate = self;
         [_overlayView addGestureRecognizer:recognzier];
     }
+    
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    UIWindow *window = [self windowToShow];
+    if (UIDeviceOrientationIsLandscape(orientation)) {
+        _overlayView.frame = CGRectMake(0, 0, window.frame.size.height, window.frame.size.width);
+    }
+    else {
+        _overlayView.frame = CGRectMake(0, 0, window.frame.size.width, window.frame.size.height);
+    }
+    
     return _overlayView;
 }
 
@@ -239,6 +256,22 @@ static CFLCustomAlertView *currentAlertView = nil;
 }
 
 #pragma mark - Inner Methods
+
+-(UIWindow*)windowToShow {
+    
+    UIWindow *window;
+    
+    NSEnumerator *windows = [[[UIApplication sharedApplication] windows] reverseObjectEnumerator];
+    
+    for (UIWindow *w in windows) {
+        if (window.windowLevel == UIWindowLevelNormal) {
+            window = w;
+            break;
+        }
+    }
+    return window;
+}
+
 -(void)setupView {
     if (isViewReady)
         return;
@@ -253,18 +286,24 @@ static CFLCustomAlertView *currentAlertView = nil;
         [self.view addSubview:self.viewButtonsHolder];
     }
     else {
-        //Center custom view
-        CGRect frame = self.view.frame;
-        NSInteger x = (CGRectGetWidth(self.overlayView.frame) - CGRectGetWidth(frame))/2.0;
-        NSInteger y = (CGRectGetHeight(self.overlayView.frame) - CGRectGetHeight(frame))/2.0;
-        self.view.frame = CGRectMake(x, y, frame.size.width, frame.size.height);
+        [self centerCustomView];
     }
     [self.overlayView addSubview:self.view];
     isViewReady = YES;
 }
 
+-(void)centerCustomView {
+    CGRect frame = self.view.frame;
+    NSInteger x = (CGRectGetWidth(self.overlayView.frame) - CGRectGetWidth(frame))/2.0;
+    NSInteger y = (CGRectGetHeight(self.overlayView.frame) - CGRectGetHeight(frame))/2.0;
+    self.view.frame = CGRectMake(x, y, frame.size.width, frame.size.height);
+}
+
 -(CGRect)calculateViewFrame {
     int width = 0.9*self.overlayView.frame.size.width;
+    if (width > 288)
+        width = 288;
+    
     int height = 0;
     height += self.titleView.frame.size.height;
     height += self.titleView.frame.origin.y;
@@ -371,6 +410,27 @@ static CFLCustomAlertView *currentAlertView = nil;
     
     [self dismissWithButtonIndex:buttonIndex];
 }
+
+
+#pragma mark - Orientation changes
+-(void)deviceOrientationDidChange:(NSNotification *)notification {
+    NSLog(@"deviceOrientationDidChange");
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    UIWindow *window = [self windowToShow];
+    if (UIDeviceOrientationIsLandscape(orientation)) {
+        self.overlayView.frame = CGRectMake(0, 0, window.frame.size.height, window.frame.size.width);
+    }
+    else {
+        self.overlayView.frame = CGRectMake(0, 0, window.frame.size.width, window.frame.size.height);
+    }
+    if (!isCustomView) {
+        self.view.frame = [self calculateViewFrame];
+    }
+    else {
+        [self centerCustomView];
+    }
+}
+
 
 #pragma mark - CFLAlertViewTapOutsideRecognizerDelegate
 -(UIView *)dialogView {

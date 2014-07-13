@@ -103,4 +103,12 @@
     NSLog(@"customAlertView:didDismissWithButtonIndex: %d", (int)buttonIndex);
 }
 
+-(BOOL)customAlertViewShouldDismissOnTapOutside:(CFLCustomAlertView *)alertView {
+    return YES;
+}
+
+-(void)customAlertViewDidDismissByTappingOutside:(CFLCustomAlertView *)alertView {
+    
+}
+
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		252E6198196C55AB000BDE8D /* CFLAlertButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 252E6197196C55AB000BDE8D /* CFLAlertButton.m */; };
 		25B3DB8E195C8C1400F85935 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B3DB8D195C8C1400F85935 /* Foundation.framework */; };
 		25B3DB90195C8C1400F85935 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B3DB8F195C8C1400F85935 /* CoreGraphics.framework */; };
 		25B3DB92195C8C1400F85935 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B3DB91195C8C1400F85935 /* UIKit.framework */; };
@@ -20,6 +21,7 @@
 		25B3DBAE195C8C1400F85935 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B3DB8D195C8C1400F85935 /* Foundation.framework */; };
 		25B3DBAF195C8C1400F85935 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B3DB91195C8C1400F85935 /* UIKit.framework */; };
 		25B3DBC6195C8CC800F85935 /* CFLCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B3DBC5195C8CC800F85935 /* CFLCustomAlertView.m */; };
+		25EA330D197D8437001E013C /* MainiPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25EA330B197D8437001E013C /* MainiPad.storyboard */; };
 		585F65BE1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 585F65BD1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m */; };
 		58DAFD63195FD00D003EE805 /* apple_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 58DAFD62195FD00D003EE805 /* apple_logo.png */; };
 		58DAFD68195FD59B003EE805 /* TitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58DAFD67195FD59B003EE805 /* TitleView.xib */; };
@@ -37,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		252E6196196C55AB000BDE8D /* CFLAlertButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFLAlertButton.h; sourceTree = "<group>"; };
+		252E6197196C55AB000BDE8D /* CFLAlertButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFLAlertButton.m; sourceTree = "<group>"; };
 		25B3DB8A195C8C1400F85935 /* CustomAlertView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomAlertView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25B3DB8D195C8C1400F85935 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		25B3DB8F195C8C1400F85935 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -55,6 +59,7 @@
 		25B3DBAC195C8C1400F85935 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		25B3DBC4195C8CC800F85935 /* CFLCustomAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFLCustomAlertView.h; sourceTree = "<group>"; };
 		25B3DBC5195C8CC800F85935 /* CFLCustomAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFLCustomAlertView.m; sourceTree = "<group>"; };
+		25EA330C197D8437001E013C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainiPad.storyboard; sourceTree = "<group>"; };
 		585F65BC1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFLAlertViewTapOutsideRecognizer.h; sourceTree = "<group>"; };
 		585F65BD1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFLAlertViewTapOutsideRecognizer.m; sourceTree = "<group>"; };
 		58DAFD62195FD00D003EE805 /* apple_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple_logo.png; sourceTree = "<group>"; };
@@ -123,6 +128,7 @@
 				25B3DB9C195C8C1400F85935 /* CFLAppDelegate.h */,
 				25B3DB9D195C8C1400F85935 /* CFLAppDelegate.m */,
 				25B3DB9F195C8C1400F85935 /* Main.storyboard */,
+				25EA330B197D8437001E013C /* MainiPad.storyboard */,
 				25B3DBA2195C8C1400F85935 /* CFLViewController.h */,
 				25B3DBA3195C8C1400F85935 /* CFLViewController.m */,
 				58DAFD69195FE334003EE805 /* info_icon.png */,
@@ -159,6 +165,8 @@
 				25B3DBC5195C8CC800F85935 /* CFLCustomAlertView.m */,
 				585F65BC1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.h */,
 				585F65BD1960B09A000FB442 /* CFLAlertViewTapOutsideRecognizer.m */,
+				252E6196196C55AB000BDE8D /* CFLAlertButton.h */,
+				252E6197196C55AB000BDE8D /* CFLAlertButton.m */,
 			);
 			path = CustomAlertView;
 			sourceTree = "<group>";
@@ -252,6 +260,7 @@
 				25B3DB98195C8C1400F85935 /* InfoPlist.strings in Resources */,
 				58DAFD63195FD00D003EE805 /* apple_logo.png in Resources */,
 				25B3DBA1195C8C1400F85935 /* Main.storyboard in Resources */,
+				25EA330D197D8437001E013C /* MainiPad.storyboard in Resources */,
 				58DAFD6A195FE334003EE805 /* info_icon.png in Resources */,
 				58DAFD68195FD59B003EE805 /* TitleView.xib in Resources */,
 			);
@@ -275,6 +284,7 @@
 				25B3DB9E195C8C1400F85935 /* CFLAppDelegate.m in Sources */,
 				25B3DB9A195C8C1400F85935 /* main.m in Sources */,
 				25B3DBC6195C8CC800F85935 /* CFLCustomAlertView.m in Sources */,
+				252E6198196C55AB000BDE8D /* CFLAlertButton.m in Sources */,
 				25B3DBA4195C8C1400F85935 /* CFLViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -311,6 +321,14 @@
 				25B3DBA0195C8C1400F85935 /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		25EA330B197D8437001E013C /* MainiPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				25EA330C197D8437001E013C /* Base */,
+			);
+			name = MainiPad.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -394,7 +412,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/CustomAlertView-Prefix.pch";
 				INFOPLIST_FILE = "Example/CustomAlertView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -407,7 +427,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/CustomAlertView-Prefix.pch";
 				INFOPLIST_FILE = "Example/CustomAlertView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

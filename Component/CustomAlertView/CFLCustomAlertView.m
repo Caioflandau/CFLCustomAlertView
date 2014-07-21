@@ -8,6 +8,7 @@
 
 #import "CFLCustomAlertView.h"
 #import "CFLAlertViewTapOutsideRecognizer.h"
+#import "CFLAlertButton.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface CFLCustomAlertView () <CFLAlertViewTapOutsideRecognizerDelegate> {
@@ -22,6 +23,8 @@
     
     NSString *title;
     NSString *message;
+    
+    UIDeviceOrientation currentOrientation;
 }
 
 @property (readonly) UIView *overlayView;
@@ -243,7 +246,6 @@ static CFLCustomAlertView *currentAlertView = nil;
     return _viewButtonsHolder;
 }
 
-
 -(UIColor *)tintColor {
     if (_tintColor == nil) {
         _tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
@@ -261,14 +263,16 @@ static CFLCustomAlertView *currentAlertView = nil;
     
     UIWindow *window;
     
-    NSEnumerator *windows = [[[UIApplication sharedApplication] windows] reverseObjectEnumerator];
+    window = [UIApplication sharedApplication].keyWindow;
     
-    for (UIWindow *w in windows) {
-        if (window.windowLevel == UIWindowLevelNormal) {
-            window = w;
-            break;
-        }
-    }
+//    NSEnumerator *windows = [[[UIApplication sharedApplication] windows] reverseObjectEnumerator];
+//    
+//    for (UIWindow *w in windows) {
+//        if (window.windowLevel == UIWindowLevelNormal) {
+//            window = w;
+//            break;
+//        }
+//    }
     return window;
 }
 
@@ -285,14 +289,12 @@ static CFLCustomAlertView *currentAlertView = nil;
         _viewButtonsHolder = nil;
         [self.view addSubview:self.viewButtonsHolder];
     }
-    else {
-        [self centerCustomView];
-    }
+    [self centerView];
     [self.overlayView addSubview:self.view];
     isViewReady = YES;
 }
 
--(void)centerCustomView {
+-(void)centerView {
     CGRect frame = self.view.frame;
     NSInteger x = (CGRectGetWidth(self.overlayView.frame) - CGRectGetWidth(frame))/2.0;
     NSInteger y = (CGRectGetHeight(self.overlayView.frame) - CGRectGetHeight(frame))/2.0;
@@ -328,7 +330,6 @@ static CFLCustomAlertView *currentAlertView = nil;
     }
 }
 
-
 -(NSArray*)putButtonsVertically {
     int buttonWidth = self.viewButtonsHolder.frame.size.width;
     int buttonHeight = 44.f;
@@ -339,7 +340,7 @@ static CFLCustomAlertView *currentAlertView = nil;
     for (int i = 0; i < reverseButtons.count; i++) {
         NSString *buttonTitle = [reverseButtons objectAtIndex:i];
         
-        UIButton *button = [self buttonWithDefaultStyleForTitle:buttonTitle];
+        CFLAlertButton *button = [self buttonWithDefaultStyleForTitle:buttonTitle];
         
         button.frame = CGRectMake(0, i*buttonHeight, buttonWidth, buttonHeight);
         
@@ -360,7 +361,7 @@ static CFLCustomAlertView *currentAlertView = nil;
     
     for (int i = 0; i < buttonTitles.count; i++) {
         NSString *buttonTitle = [buttonTitles objectAtIndex:i];
-        UIButton *button = [self buttonWithDefaultStyleForTitle:buttonTitle];
+        CFLAlertButton *button = [self buttonWithDefaultStyleForTitle:buttonTitle];
         button.frame = CGRectMake(i*buttonWidth, 0, buttonWidth, buttonHeight);
         
         CALayer *borderToAdd;
@@ -379,15 +380,17 @@ static CFLCustomAlertView *currentAlertView = nil;
     return buttonsArray;
 }
 
--(UIButton*)buttonWithDefaultStyleForTitle:(NSString*)t {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+-(CFLAlertButton*)buttonWithDefaultStyleForTitle:(NSString*)t {
+    CFLAlertButton *button = [CFLAlertButton buttonWithType:UIButtonTypeCustom];
     [button setTitle:t forState:UIControlStateNormal];
     [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+    button.tintColor = self.tintColor;
+    button.highlightBackgroundColor = [UIColor colorWithWhite:0.85 alpha:0.5];
     button.clipsToBounds = YES;
     return button;
 }
 
--(CALayer *)topOnlyBorderLayerForButton:(UIButton*)button {
+-(CALayer *)topOnlyBorderLayerForButton:(CFLAlertButton*)button {
     CALayer *borderToAdd = [CALayer layer];
     borderToAdd.borderColor = [UIColor colorWithWhite:0.66f alpha:0.85].CGColor;
     borderToAdd.borderWidth = 0.5f;
@@ -395,7 +398,7 @@ static CFLCustomAlertView *currentAlertView = nil;
     return borderToAdd;
 }
 
--(CALayer *)topRightBorderLayerForButton:(UIButton*)button {
+-(CALayer *)topRightBorderLayerForButton:(CFLAlertButton*)button {
     CALayer *borderToAdd = [CALayer layer];
     borderToAdd.borderColor = [UIColor colorWithWhite:0.66f alpha:0.85].CGColor;
     borderToAdd.borderWidth = 0.5f;
@@ -416,6 +419,10 @@ static CFLCustomAlertView *currentAlertView = nil;
 -(void)deviceOrientationDidChange:(NSNotification *)notification {
     NSLog(@"deviceOrientationDidChange");
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if (currentOrientation == orientation)
+        return;
+    
+    currentOrientation = orientation;
     UIWindow *window = [self windowToShow];
     if (UIDeviceOrientationIsLandscape(orientation)) {
         self.overlayView.frame = CGRectMake(0, 0, window.frame.size.height, window.frame.size.width);
@@ -426,9 +433,7 @@ static CFLCustomAlertView *currentAlertView = nil;
     if (!isCustomView) {
         self.view.frame = [self calculateViewFrame];
     }
-    else {
-        [self centerCustomView];
-    }
+    [self centerView];
 }
 
 

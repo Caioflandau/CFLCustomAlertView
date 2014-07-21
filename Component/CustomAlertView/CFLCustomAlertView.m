@@ -265,14 +265,6 @@ static CFLCustomAlertView *currentAlertView = nil;
     
     window = [UIApplication sharedApplication].keyWindow;
     
-//    NSEnumerator *windows = [[[UIApplication sharedApplication] windows] reverseObjectEnumerator];
-//    
-//    for (UIWindow *w in windows) {
-//        if (window.windowLevel == UIWindowLevelNormal) {
-//            window = w;
-//            break;
-//        }
-//    }
     return window;
 }
 

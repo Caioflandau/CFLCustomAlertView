@@ -24,7 +24,7 @@
     NSString *title;
     NSString *message;
     
-    UIDeviceOrientation currentOrientation;
+    UIInterfaceOrientation currentOrientation;
 }
 
 @property (readonly) UIView *overlayView;
@@ -121,11 +121,19 @@ static CFLCustomAlertView *currentAlertView = nil;
 
 
 -(void)showInWindow:(UIWindow*) window {
+    currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     isShowing = YES;
     self.view.alpha = 0;
     self.view.transform = CGAffineTransformScale(startingViewTransform, 1.2, 1.2);
     self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
-    [[window.subviews objectAtIndex:0] addSubview:self.overlayView];
+    if (currentOrientation == UIInterfaceOrientationLandscapeLeft) {
+        self.overlayView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    }
+    else if (currentOrientation == UIInterfaceOrientationLandscapeRight) {
+        self.overlayView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    }
+    [self centerView];
+    [window addSubview:self.overlayView];
     [UIView animateWithDuration:0.2 animations:^{
         self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4f];
         self.view.alpha = 1;
@@ -143,14 +151,9 @@ static CFLCustomAlertView *currentAlertView = nil;
         [_overlayView addGestureRecognizer:recognzier];
     }
     
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     UIWindow *window = [self windowToShow];
-    if (UIDeviceOrientationIsLandscape(orientation)) {
-        _overlayView.frame = CGRectMake(0, 0, window.frame.size.height, window.frame.size.width);
-    }
-    else {
-        _overlayView.frame = CGRectMake(0, 0, window.frame.size.width, window.frame.size.height);
-    }
+
+    _overlayView.frame = CGRectMake(0, 0, window.frame.size.width, window.frame.size.height);
     
     return _overlayView;
 }
@@ -263,7 +266,7 @@ static CFLCustomAlertView *currentAlertView = nil;
     
     UIWindow *window;
     
-    window = [UIApplication sharedApplication].keyWindow;
+    window = [[UIApplication sharedApplication] windows].firstObject;
     
     return window;
 }
@@ -281,15 +284,18 @@ static CFLCustomAlertView *currentAlertView = nil;
         _viewButtonsHolder = nil;
         [self.view addSubview:self.viewButtonsHolder];
     }
-    [self centerView];
     [self.overlayView addSubview:self.view];
     isViewReady = YES;
 }
 
 -(void)centerView {
     CGRect frame = self.view.frame;
-    NSInteger x = (CGRectGetWidth(self.overlayView.frame) - CGRectGetWidth(frame))/2.0;
-    NSInteger y = (CGRectGetHeight(self.overlayView.frame) - CGRectGetHeight(frame))/2.0;
+    NSInteger windowFrameHeight = UIInterfaceOrientationIsLandscape(currentOrientation) ? CGRectGetWidth(self.overlayView.frame) : CGRectGetHeight(self.overlayView.frame);
+    
+    NSInteger windowFrameWidth = UIInterfaceOrientationIsLandscape(currentOrientation) ? CGRectGetHeight(self.overlayView.frame) : CGRectGetWidth(self.overlayView.frame);
+    
+    NSInteger x = (windowFrameWidth - CGRectGetWidth(frame))/2.0;
+    NSInteger y = (windowFrameHeight - CGRectGetHeight(frame))/2.0;
     self.view.frame = CGRectMake(x, y, frame.size.width, frame.size.height);
 }
 
@@ -410,13 +416,14 @@ static CFLCustomAlertView *currentAlertView = nil;
 #pragma mark - Orientation changes
 -(void)deviceOrientationDidChange:(NSNotification *)notification {
     NSLog(@"deviceOrientationDidChange");
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
     if (currentOrientation == orientation)
         return;
     
     currentOrientation = orientation;
     UIWindow *window = [self windowToShow];
-    if (UIDeviceOrientationIsLandscape(orientation)) {
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
         self.overlayView.frame = CGRectMake(0, 0, window.frame.size.height, window.frame.size.width);
     }
     else {

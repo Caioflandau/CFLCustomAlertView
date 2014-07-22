@@ -108,7 +108,7 @@
 }
 
 -(void)customAlertViewDidDismissByTappingOutside:(CFLCustomAlertView *)alertView {
-    
+    NSLog(@"Alert was dismissed by tapping outside");
 }
 
 @end

@@ -415,7 +415,6 @@ static CFLCustomAlertView *currentAlertView = nil;
 
 #pragma mark - Orientation changes
 -(void)deviceOrientationDidChange:(NSNotification *)notification {
-    NSLog(@"deviceOrientationDidChange");
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     
     if (currentOrientation == orientation)

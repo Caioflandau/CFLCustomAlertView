@@ -42,6 +42,7 @@ For more examples and options, please check the Example project in the repositor
 ##Current limitations
 This is a newly released component. As such, expect some limitations and probably even some bugs. Here's a small list:
 
-* Currently, only supports portrait orientation.
-* Support for iPad is limited. It can be useful with a custom view.
+* Support for iPad is limited. It's being worked on. Right now, it can be useful with a custom view
+* Doesn't respond to orientation changes yet. If your app supports multiple orientations, this component is not for you (yet!)
 * For more, check [issues](https://github.com/Caioflandau/CFLCustomAlertView/issues)
+* Why not send a pull request and help fix some of these?
